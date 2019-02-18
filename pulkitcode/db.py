@@ -1,7 +1,7 @@
 import psycopg2 as pg
 
 dbname = "postgres"
-passsword =
+password = ""
 conn = pg.connect(database = dbname, user = "postgres", password = password, host = "localhost", port = "5432")
 cur = conn.cursor()
 
@@ -64,12 +64,12 @@ cur.execute(crttbl)
 conn.commit()
 
 #cur.execute("\\COPY country FROM 'C:\\Users\\Admin\\Desktop\\Pulkit\\Sem 8\\COL362\\Project\\Country-Code.csv';")
-'''
+
 with open('Country-Code.csv', 'r') as f:
     next(f)  # Skip the header row.
     #cur.copy_from(f, 'temp', sep =',')
-    cur.copy_expert("copy temp from stdin (format csv)", f)
-'''
+    cur.copy_expert("copy country from stdin (format csv)", f)
+
 with open('dict.csv', 'r') as f:
     next(f)  # Skip the header row.
     cur.copy_expert("copy cuisine from stdin (format csv)", f)
