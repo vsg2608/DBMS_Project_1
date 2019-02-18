@@ -5,7 +5,7 @@ import sys
 
 import psycopg2 as pg
 
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, request
 
 dbname = "project"
 password = "3010"
@@ -17,12 +17,14 @@ app = Flask(__name__)
 
 @app.route("/")
 def root():
+    # getrequest = request.args.get('')
+    print(request.query_string)
     cur.execute(
         """
         SELECT * from rest limit 10;
     """)
     rows = cur.fetchall()
-    print(rows)
+    # print(rows)
     return render_template("base.html", rows=rows)
 
 
