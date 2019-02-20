@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% for rest in restaurants %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ rest[2] }}</a>
+              <small class="text-muted">Average cost for two: {{ rest[3] }}/-</small>
+            </div>
+            <h2><a class="article-title" href="#">{{ rest[0] }}</a></h2>
+            <p class="article-content">{{ rest[1] }}</p>
+          </div>
+        </article>
+    {% endfor %}
+{% endblock content %}
