@@ -93,11 +93,9 @@ with open('Country-Code.csv', 'r') as f:
     cur.copy_expert("copy country from stdin (format csv)", f)
 
 with open('dict.csv', 'r') as f:
-    next(f)  # Skip the header row.
     cur.copy_expert("copy cuisine from stdin (format csv)", f)
 
 with open('restid_cuisineid.csv', 'r') as f:
-    next(f)  # Skip the header row.
     cur.copy_expert("copy Rest_Cuisine from stdin (format csv)", f)
 #conn.commit()
 
