@@ -1,18 +1,20 @@
 import psycopg2 as pg
 
 dbname = "project"
-password = ""
-conn = pg.connect(database = dbname, user = "postgres", password = password, host = "localhost", port = "5432")
+password = "Password@123"
+conn = pg.connect(database = dbname, user = "postgres", password = password, host = "13.233.41.140", port = "5432")
 cur = conn.cursor()
-'''
+
+"""
 conn.autocommit = True
 #cur.execute("DROP DATABASE project;")
-crtdb = """CREATE DATABASE project;"""
+crtdb = "CREATE DATABASE project;"
 cur.execute(crtdb)
 conn.commit()
-cur.execute(r"\CONNECT project;")
+cur.execute("\CONNECT project;")
 conn.autocommit = False
-'''
+"""
+
 cur.execute("DROP TABLE IF EXISTS city, country, cuisine, ratings, rest, rest_cuisine, temp, transaction, users;")
 
 crttbl = "CREATE TABLE temp (Restaurant_ID int,	Restaurant_Name VARCHAR, Country_Code int, City VARCHAR, Address VARCHAR," \

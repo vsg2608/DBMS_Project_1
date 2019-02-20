@@ -1,0 +1,10 @@
+1.  Open you gitbash
+2.  Reach this directory with /UbuntuKey.pem file on git bash
+3.  write this below command and type yes when asked for first time=>
+        ssh -i "UbuntuKey.pem" ubuntu@ec2-13-233-41-140.ap-south-1.compute.amazonaws.com
+4.  Now you are remotely accessing the server through command line.
+5.  Now below commands to login into postgres user and psql=>
+        sudo -i -u postgres
+        psql
+6.  Now do whatever query you want to do
+7.  Be happy :)
