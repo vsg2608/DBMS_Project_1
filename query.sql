@@ -9,6 +9,9 @@ select restaurant_id, restaurant_name into temp tempcity from rest, city where r
 -- create filter table, create everytime a new city is used or filters are changed (not added)
 select rest.* into temp filterresult from rest, tempcity where rest.restaurant_id = tempcity.restaurant_id;
 
+-- Filter by name, substring possible
+delete from filterresult where filterresult.restaurant_id not in (select restaurant_id from filterresult where lower(filterresult.restaurant_name) LIKE lower('%%'));
+
 -- Filter by locality, input name of locality preferably give options after few letters
 delete from filterresult where filterresult.restaurant_id not in (select restaurant_id from filterresult, city where filterresult.localityid = city.id and lower(city.locality) = lower(''));
 
