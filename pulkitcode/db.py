@@ -56,8 +56,8 @@ cur.execute(crttbl)
 crttbl = "CREATE TABLE Rest_Cuisine (Rest_ID INT REFERENCES rest (Restaurant_ID), Cuisine_Code INT);"
 cur.execute(crttbl)
 
-crttbl = "CREATE TABLE users (User_ID INT PRIMARY KEY, Password VARCHAR, Name VARCHAR, DoB DATE, " \
-         "Gender CHAR CHECK (Gender IN ('M','F')), Address VARCHAR, Locality VARCHAR);"
+crttbl = "CREATE TABLE users (User_ID SERIAL PRIMARY KEY, Password VARCHAR, Name VARCHAR, email text not null unique,"\
+          "DoB DATE, Gender CHAR CHECK (Gender IN ('M','F')), Address VARCHAR, Locality VARCHAR);"
 cur.execute(crttbl)
 
 crttbl = "CREATE TABLE Transaction (Id INT, UserId INT REFERENCES users(User_ID)," \

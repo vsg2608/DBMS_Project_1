@@ -1,0 +1,3 @@
+------------------------------------------------
+User Registration inputs:
+input name, password, DoB, Gender (M or F), address, locality, email

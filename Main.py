@@ -1,5 +1,5 @@
 import psycopg2 as pg
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, flash
 from forms import RegisterationForm, LoginForm
 import os
 import sys
@@ -43,9 +43,12 @@ def search():
    print(restaurants[0][0])
    return render_template('search.html',title='Find Restaurant',restaurants=restaurants)
    
-@app.route('/userRegister')
+@app.route('/userRegister', methods=['GET','POST'])
 def userRegister():
    form= RegisterationForm()
+   if form.validate_on_submit():
+      flash(f'Accound Created for { form.username.data}!', 'success')
+      return redirect(url_for('home'))
    return render_template('userRegister.html',title='User Register', form=form)
 
 @app.route('/userLogin')
