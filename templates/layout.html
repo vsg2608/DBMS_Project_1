@@ -17,28 +17,29 @@
     {% endif %}
 </head>
 <body>
-    <header class="site-header">
-      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-        <div class="container">
-          <a class="navbar-brand mr-4" href="/">Flask Blog</a>
+    <header class="site-header" style="color:#cf8b32;">
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top" >
+        <div class="container" >
+          <a class="navbar-brand mr-4" href="/">Restaurant Finder</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="/">Home</a>
-              <a class="nav-item nav-link" href="/search">Find Restaurant</a>
-              <a class="nav-item nav-link" href="/about">About</a>
+              <a class="nav-item nav-link" href="{{ url_for('home')}}">Home</a>
+              <a class="nav-item nav-link" href="{{url_for('search')}}">Find Restaurant</a>
+              <a class="nav-item nav-link" href="{{url_for('about')}}">About</a>
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
-              <a class="nav-item nav-link" href="/userLogin">Login</a>
-              <a class="nav-item nav-link" href="/userRegister">Register</a>
+              <a class="nav-item nav-link" href="{{url_for('userLogin')}}">Login</a>
+              <a class="nav-item nav-link" href="{{url_for('userRegister')}}">Register</a>
             </div>
           </div>
         </div>
       </nav>
     </header>
+    
     <main role="main" class="container">
       <div class="row">
         <div class="col-md-8">
@@ -53,6 +54,7 @@
           {% endwith %}
           {% block content %}{% endblock %}
         </div>
+        {% block Sidebar %}
         <div class="col-md-4">
           <div class="content-section">
             <h3>Our Sidebar</h3>
@@ -66,8 +68,10 @@
             </p>
           </div>
         </div>
+         {% endblock Sidebar %}
       </div>
     </main>
+   
 
 
     <!-- Optional JavaScript -->

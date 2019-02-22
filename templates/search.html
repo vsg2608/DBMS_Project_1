@@ -5,7 +5,7 @@
           <div class="media-body">
             <div class="article-metadata">
               <a class="mr-2" href="#">{{ rest[2] }}</a>
-              <small class="text-muted">Average cost for two: {{ rest[3] }}/-</small>
+              <small class="text-muted">Average cost for two: {{ rest[3] }}/-         Rating={{ rest[5] }}</small>
             </div>
             <h2><a class="article-title" href="#">{{ rest[0] }}</a></h2>
             <p class="article-content">{{ rest[1] }}</p>
@@ -13,3 +13,69 @@
         </article>
     {% endfor %}
 {% endblock content %}
+
+{% block Sidebar %}
+<div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Search</legend>
+                <div class="form-group">
+                    {{ form.city.label(class="form-control-label") }}
+                    {% if form.city.errors %}
+                        {{ form.city(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.city.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.city(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.restaurantName.label(class="form-control-label") }}
+                    {% if form.restaurantName.errors %}
+                        {{ form.restaurantName(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.restaurantName.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.restaurantName(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.locality.label(class="form-control-label") }}
+                    {% if form.locality.errors %}
+                        {{ form.locality(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.locality.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.locality(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.rating.label(class="form-control-label") }}
+                    {% if form.rating.errors %}
+                        {{ form.rating(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.rating.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.rating(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+{% endblock Sidebar %}
