@@ -34,3 +34,11 @@ delete from filterresult where filterresult.restaurant_id not in (select rest_id
 
 
 -- Filter by area around locality (using lat long) (advanced)
+-- Inserting New User Information
+Insert Into Users (Password, Name, email, dob, gender, address, locality) value ('','','','','','','');
+
+-- 
+Create Trigger trig_total_orders AFTER Insert ON Transaction 
+for each row execute add_total_order;
+
+Create Trigger trig_user_rating AFTER Insert 
