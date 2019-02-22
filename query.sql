@@ -37,8 +37,12 @@ delete from filterresult where filterresult.restaurant_id not in (select rest_id
 -- Inserting New User Information
 Insert Into Users (Password, Name, email, dob, gender, address, locality) value ('','','','','','','');
 
+Insert Into Transaction(userid, restid, bookedon, bookedfor, no_people, rating) value ('','','','','','');
 -- 
 Create Trigger trig_total_orders AFTER Insert ON Transaction 
 for each row execute add_total_order;
 
-Create Trigger trig_user_rating AFTER Insert 
+Create Trigger trig_user_rating AFTER Insert On 
+for each row execute update_rating;
+
+

@@ -60,7 +60,7 @@ crttbl = "CREATE TABLE users (User_ID SERIAL PRIMARY KEY, Password VARCHAR, Name
           "DoB DATE, Gender CHAR CHECK (Gender IN ('M','F')), Address VARCHAR, Locality VARCHAR);"
 cur.execute(crttbl)
 
-crttbl = "CREATE TABLE Transaction (Id INT, UserId INT REFERENCES users(User_ID)," \
+crttbl = "CREATE TABLE Transaction (Id Serial, UserId INT REFERENCES users(User_ID)," \
          " RestId INT REFERENCES rest(Restaurant_ID), BookedOn TIMESTAMP, BookedFor TIMESTAMP," \
          " No_People INT, Rating INT CHECK (BookedFor - BookedOn < '1 day'::interval)," \
          " CHECK (BookedFor > BookedOn));"
