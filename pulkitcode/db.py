@@ -62,7 +62,7 @@ cur.execute(crttbl)
 
 crttbl = "CREATE TABLE Transaction (Id Serial, UserId INT REFERENCES users(User_ID)," \
          " RestId INT REFERENCES rest(Restaurant_ID), BookedOn TIMESTAMP, BookedFor TIMESTAMP," \
-         " No_People INT, Rating INT CHECK (BookedFor - BookedOn < '1 day'::interval)," \
+         " No_People INT, Rating INT CHECK (BookedFor - BookedOn < '7 day'::interval)," \
          " CHECK (BookedFor > BookedOn));"
 cur.execute(crttbl)
 
