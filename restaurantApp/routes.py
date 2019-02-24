@@ -15,9 +15,11 @@ def home():
     if 'user' in session:
         bookings= getBookingDetails(session['user'])
         print(bookings)
+        print(len(bookings))
     else:
         bookings=[]
-    return render_template('home.html', form=form, title="Home",bookings=bookings)
+    image_file= url_for('static', filename='restaurant_pics/default.jpg')
+    return render_template('home.html', form=form, title="Home",bookings=bookings, image_file=image_file)
 
 @app.route('/about')
 def about():
@@ -120,17 +122,20 @@ def search():
    form= searchForm()
    if form.validate_on_submit():
         print(form.rating.data==None)
-        query="SELECT distinct restaurant_name,address, cuisines, averagecost_for_two, currency, aggregate_rating, restaurant_id from rest, city, cuisine,rest_cuisine WHERE rest.localityid=city.id and lower(city.city)=lower('"+str(form.city.data)+"') "
+        if(False):
+            query="SELECT distinct restaurant_name,address, cuisines, averagecost_for_two, currency, aggregate_rating, restaurant_id, ratings.rating_color from rest, city, cuisine,rest_cuisine, ratings WHERE rest.localityid=city.id and lower(city.city)=lower('"+str(form.city.data)+"') and ratings.aggregate_rating = rest.aggregate_rating "
+        else:
+            query="SELECT distinct restaurant_name,address, cuisines, averagecost_for_two, currency, aggregate_rating, restaurant_id, ratings.rating_color from rest, city, ratings WHERE rest.localityid=city.id and lower(city.city)=lower('"+str(form.city.data)+"') and ratings.aggregate_rating = rest.aggregate_rating "
         if(form.restaurantName.data!=""):
             query+=" and lower(rest.restaurant_name) like lower('%" + form.restaurantName.data + "%') "
         if(form.locality.data!=""):
             query+=" and lower(city.locality) like lower('%" + form.locality.data + "%') "
         if(form.rating.data!="" and form.rating.data!=None):
             query+=" and rest.aggregate_rating>= "+str(form.rating.data)
-        cuisines="'japanese','korean'"
-        and_or=False
-        if(cuisines!=""):
-            query+= " and rest.restaurant_id= rest_cuisine.rest_id and cuisine.cuisine_code= rest_cuisine.cuisine_code and lower(cuisine.cuisine) in ("+cuisines+") "
+        # cuisines="'japanese','korean'"
+        # and_or=False
+        # if(cuisines!=""):
+        #     query+= " and rest.restaurant_id= rest_cuisine.rest_id and cuisine.cuisine_code= rest_cuisine.cuisine_code and lower(cuisine.cuisine) in ("+cuisines+") "
 
         sortbyRating= False
         sortbyRestName= False

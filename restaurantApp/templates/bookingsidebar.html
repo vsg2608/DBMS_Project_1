@@ -1,0 +1,13 @@
+{% block Sidebar %}
+        <div class="content-section">
+            {% for booking in bookings  %}
+                <div class="media">
+                    <img class="rounded-circle account-img" src="{{ image_file }}">
+                    <div class="media-body">
+                        <h2 class="account-heading">{{ booking[0] }}</h2>
+                        <p class="text-secondary">{{ booking[1] }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>        
+    {% endblock Sidebar %}
