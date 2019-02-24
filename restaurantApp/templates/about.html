@@ -1,5 +1,31 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <h1>About Page</h1>
+    <div class="content-section">
+        <p class="text-secondary">This is the team who created this webiste</p>
+        <div class="media">
+            <img class="rounded-circle account-img" src="{{ image_file }}">
+            <div class="media-body">
+            <h2 class="account-heading">Vishesh Goyal</h2>
+            <p class="text-secondary"><b>Email: </b>vsg2608@gmail.com</p>
+            <p class="text-secondary"><b>Contact: </b>+91-9779734153</p>
+            </div>
+        </div>
+        <div class="media">
+            <img class="rounded-circle account-img" src="{{ image_file }}">
+            <div class="media-body">
+            <h2 class="account-heading">Akshay Pansari</h2>
+            <p class="text-secondary"><b>Email: </b>akshay.pansari144@gmail.com</p>
+            <p class="text-secondary"><b>Contact: </b>+91-9650178101</p>
+            </div>
+        </div>
+        <div class="media">
+            <img class="rounded-circle account-img" src="{{ image_file }}">
+            <div class="media-body">
+            <h2 class="account-heading">Pulkit Srivastava</h2>
+            <p class="text-secondary"><b>Email: </b>vsg2608@gmail.com</p>
+            <p class="text-secondary"><b>Contact: </b>9779734153</p>
+            </div>
+        </div>
+    </div>
 {% endblock content %}

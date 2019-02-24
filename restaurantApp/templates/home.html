@@ -1,5 +1,33 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <h1>Home Page </h1>
+    <div class="content-section">
+        <form method="POST" action="{{url_for('search')}}">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Find the best restaurants in your area by searching below</legend>
+                <div class="form-group">
+                    <h2>{{ form.city.label(class="form-control-label") }}</h2>
+                    {% if form.city.errors %}
+                        {{ form.city(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.city.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.city(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+            {% if 'user'  not in session %}
+                <small class="text-muted ml-2">
+                    <a href="{{url_for('userLogin')}}"">Login</a>
+                </small>
+            {% endif %}
+        </form>
+    </div>
 {% endblock content %}

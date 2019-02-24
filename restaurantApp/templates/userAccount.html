@@ -5,11 +5,8 @@
         <div class="media">
             <img class="rounded-circle account-img" src="{{ image_file }}">
             <div class="media-body">
-            <h2 class="account-heading">{{ restaurant[0] }}</h2>
-            <p class="text-secondary">{{ restaurant[1] }}</p>
-            <p class="text-secondary"><b>Cuisine: </b>{{ restaurant[2] }}</p>
-            <p class="text-secondary"><b>Average cost for two: </b>{{ restaurant[3] }}</p>
-            <p class="text-secondary"><b>Rating: </b>{{ restaurant[5] }}</p>
+            <h2 class="account-heading">{{ user[0] }}</h2>
+            <p class="text-secondary">{{ user[1] }}</p>
             </div>
         </div>
     </div>
@@ -17,9 +14,10 @@
         <form method="POST" action="">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Book a Table</legend>
+                <legend class="border-bottom mb-4">Account Info</legend>
                 <div class="form-group">
                     {{ form.name.label(class="form-control-label") }}
+
                     {% if form.name.errors %}
                         {{ form.name(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
@@ -32,19 +30,19 @@
                     {% endif %}
                 </div>
                 <div class="form-group">
-                    {{ form.noOfMembers.label(class="form-control-label") }}
-                    {% if form.noOfMembers.errors %}
-                        {{ form.noOfMembers(class="form-control form-control-lg is-invalid") }}
+                    {{ form.email.label(class="form-control-label") }}
+                    {% if form.email.errors %}
+                        {{ form.email(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
-                            {% for error in form.noOfMembers.errors %}
+                            {% for error in form.email.errors %}
                                 <span>{{ error }}</span>
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.noOfMembers(class="form-control form-control-lg") }}
+                        {{ form.email(class="form-control form-control-lg") }}
                     {% endif %}
-                </div>  
-                <div class="form-group">
+                </div>
+                 <div class="form-group">
                     {{ form.date.label(class="form-control-label") }}
                     {% if form.date.errors %}
                         {{ form.date(class="form-control form-control-lg is-invalid") }}
@@ -56,16 +54,11 @@
                     {% else %}
                         {{ form.date(class="form-control form-control-lg") }}
                     {% endif %}
-                </div>  
+                </div>
             </fieldset>
             <div class="form-group">
                 {{ form.submit(class="btn btn-outline-info") }}
             </div>
-            {% if 'user'  not in session %}
-                <small class="text-muted ml-2">
-                    <a href="{{url_for('userLogin')}}"">Login</a>
-                </small>
-            {% endif %}
         </form>
     </div>
 {% endblock content %}
