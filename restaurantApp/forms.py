@@ -49,5 +49,5 @@ class homeSearch(FlaskForm):
 
 class tableBookingForm(FlaskForm):
     noOfMembers     = IntegerField('Table for',validators=[DataRequired()])
-    date        = DateTimeField("Booking Date, Time",format="%Y-%m-%d", validators=[DataRequired()])
+    date        = DateTimeField("Booking Date, Time (Upto 7 days from now)",format="%Y-%m-%d", validators=[DataRequired()])
     submit          = SubmitField('Book Table')

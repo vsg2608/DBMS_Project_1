@@ -17,7 +17,8 @@ def home():
         print(bookings)
     else:
         bookings=[]
-    return render_template('home.html', form=form, title="Home",bookings=bookings)
+    image_file= url_for('static', filename='restaurant_pics/default.jpg')
+    return render_template('home.html', form=form, title="Home",bookings=bookings, image_file=image_file)
 
 @app.route('/about')
 def about():
