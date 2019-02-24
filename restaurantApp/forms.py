@@ -48,7 +48,6 @@ class homeSearch(FlaskForm):
  ####################################################################################
 
 class tableBookingForm(FlaskForm):
-    name            = StringField('Name', validators=[DataRequired()])
     noOfMembers     = IntegerField('Table for',validators=[DataRequired()])
     date        = DateTimeField("Booking Date, Time",format="%Y-%m-%d", validators=[DataRequired()])
     submit          = SubmitField('Book Table')

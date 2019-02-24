@@ -31,3 +31,11 @@
         </form>
     </div>
 {% endblock content %}
+
+{% if 'user' in session %}
+    {% block Sidebar %}
+        {% for booking in bookings  %}
+            {{ booking[3] }}
+        {% endfor %}
+    {% endblock Sidebar %}
+{% endif %}

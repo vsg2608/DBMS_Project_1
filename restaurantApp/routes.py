@@ -12,7 +12,12 @@ cur = conn.cursor()
 @app.route('/home')
 def home():
     form = homeSearch()
-    return render_template('home.html', form=form)
+    if 'user' in session:
+        bookings= getBookingDetails(session['user'])
+        print(bookings)
+    else:
+        bookings=[]
+    return render_template('home.html', form=form, title="Home",bookings=bookings)
 
 @app.route('/about')
 def about():
@@ -136,4 +141,7 @@ def search():
         cur.execute(query+";")
         restaurants= cur.fetchall()
    return render_template('search.html',title='Find Restaurant',restaurants=restaurants, form=form)
-   
+
+def getBookingDetails(user_id):
+    cur.execute("SELECT rest.restaurant_name, rest.address, city.locality, transaction.bookedfor, transaction.no_people, transaction.rating from transaction, rest, city WHERE userid="+str(user_id)+" and rest.restaurant_id= transaction.restid and city.id= rest.localityid;")
+    return cur.fetchall()
