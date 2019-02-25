@@ -44,21 +44,21 @@
 -- -- AFTER INSERT OF rating ON Transaction
 -- -- EXECUTE PROCEDURE update_orders();
 
-CREATE TRIGGER trig_updateratings
-AFTER UPDATE of rating on Transaction
-EXECUTE PROCEDURE update_ratings();
-
-CREATE FUNCTION update_ratings() RETURNS trigger as $update_ratings$
+CREATE FUNCTION update_ratings() RETURNS trigger as
+$update_ratings$
 DECLARE
-    temprate FLOAT := select aggregate_rating from rest where rest.restaurant_id = new.restid;
+    temprate FLOAT;
+	tempvote INT;
 BEGIN
-    -- temprate = rest.aggregate_rating;
-
-    UPDATE rest SET aggregate_rating = ROUND((((temprate*votes)+new.rating)/(temprate+1)),1) where rest.restaurant_id = new.restid;
+    select aggregate_rating, votes into temprate, tempvote from rest where rest.restaurant_id = new.restid;
+    UPDATE rest SET aggregate_rating = ROUND((((temprate*tempvote)+new.rating)/(tempvote+1))::numeric,1) where rest.restaurant_id = new.restid;
     UPDATE rest SET votes = votes+1 where rest.restaurant_id = new.restid;
     RETURN NULL;
 END;
-$update_ratings()$ language plpgsql;
+$update_ratings$
+language plpgsql;
+
+CREATE TRIGGER trig_updateratings AFTER UPDATE of rating on Transaction FOR EACH ROW EXECUTE PROCEDURE update_ratings();
 
 -- CREATE FUNCTION update_ratings() RETURNS trigger as $update_ratings$ DECLARE temprate FLOAT := select aggregate_rating from rest where rest.restaurant_id = new.restid;BEGIN
 --     -- temprate = rest.aggregate_rating;

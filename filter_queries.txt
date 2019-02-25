@@ -1,0 +1,7 @@
+query = "select rest.* from rest, city where"
+if filter 
+  A + " rest.aggregate_rating >= input"
+if filter
+  A + "rest.votes >= input"
+
+cur.execute(A)  
