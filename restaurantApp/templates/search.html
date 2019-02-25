@@ -4,8 +4,15 @@
         <article class="media content-section">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="#">{{ rest[2] }}</a>
-              <small class="text-muted">Average cost for two: {{ rest[3] }}/-         Rating={{ rest[5] }}</small>
+                <a class="mr-2" href="#">{{ rest[2] }}</a>
+                <small class="text-muted">Average cost for two: {{ rest[3] }}/-</small>
+                <h4 small class="text-muted" id="Rating-div" style="float: right;
+                                                    border-radius: 10%;
+                                                    background-color: {{rest[7].replace(" ","")}};
+                                                    color: white;
+                                                    padding: 5px;">
+                    <b style="color: grey">{{ rest[5] }}</b>
+                </h4>
             </div>
             <h2><a class="article-title" href="/find/{{rest[6]}}">{{ rest[0] }}</a></h2>
             <p class="article-content">{{ rest[1] }}</p>
@@ -70,6 +77,32 @@
                         </div>
                     {% else %}
                         {{ form.rating(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.cuisine.label(class="form-control-label") }}
+                    {% if form.cuisine.errors %}
+                        {{ form.cuisine(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.cuisine.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.cuisine(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.sortBy.label(class="form-control-label") }}
+                    {% if form.sortBy.errors %}
+                        {{ form.sortBy(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.sortBy.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.sortBy(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
             </fieldset>

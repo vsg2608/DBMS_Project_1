@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, RadioField, TextAreaField
-from wtforms.validators import DataRequired, Length, Email, EqualTo
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, RadioField, TextAreaField, DecimalField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, NumberRange
 from wtforms.fields.html5 import DateField, DateTimeField
 
 class RegisterationForm(FlaskForm):
@@ -35,9 +35,10 @@ class searchForm(FlaskForm):
                     validators=[DataRequired()])
     restaurantName= StringField('Restaurant Name')
     locality    = StringField('Locality')
-    rating      = IntegerField('Rating')
+    rating      = IntegerField("Rating", validators=[NumberRange(min=0, max=5, message="Rating should be between 0 and 5")])
     submit      = SubmitField('Search')
-    #cuisine   = StringField()
+    cuisine     = StringField()
+    sortBy      = RadioField("Sort By", choices=[('rating','Rating'),('price','Price'),('restName','Restaurant Name')])
     #cusinineOR    = StringField()
     #Cost range     
 
@@ -52,5 +53,7 @@ class tableBookingForm(FlaskForm):
     date            = DateTimeField("Booking Date, Time (Upto 7 days from now)",format="%Y-%m-%d", validators=[DataRequired()])
     submit          = SubmitField('Book Table')
 
-# class ratingForm(FlaskForm):
-#     rating      =
+class ratingForm(FlaskForm):
+    rating      = IntegerField("Rating", validators=[DataRequired(), NumberRange(min=0, max=5, message="Rating should be between 0 and 5")])
+    submit      = SubmitField('Rate')
+

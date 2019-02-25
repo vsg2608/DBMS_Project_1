@@ -33,6 +33,7 @@
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
               {% if 'user' in session %}
+                <a class="nav-item nav-link" href="{{url_for('bookings')}}">Bookings</a>
                 <a class="nav-item nav-link" href="{{url_for('userAccount')}}">Account</a>
                 <a class="nav-item nav-link" href="{{url_for('userLogout')}}">Logout</a>
               {% else %}

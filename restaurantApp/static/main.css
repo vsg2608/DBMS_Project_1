@@ -82,3 +82,9 @@ body {
   .text-muted {
     text-align-last: right;
 }
+
+#Rating-div{
+  float: right;
+  border: 3px solid #73AD21;
+  padding: 10px;
+}

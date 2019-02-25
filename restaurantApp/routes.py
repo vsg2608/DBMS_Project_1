@@ -1,6 +1,6 @@
 import psycopg2 as pg
 from flask import Flask, render_template, redirect, flash,url_for, session
-from restaurantApp.forms import RegisterationForm, LoginForm, searchForm, UpdateForm, homeSearch, tableBookingForm
+from restaurantApp.forms import RegisterationForm, LoginForm, searchForm, UpdateForm, homeSearch, tableBookingForm, ratingForm
 from restaurantApp import app, bcrypt, login_manager
 import datetime
 dbname = "project"
@@ -8,18 +8,11 @@ password = "Password@123"
 conn = pg.connect(database = dbname, user = "postgres", password = password, host = "13.233.41.140", port = "5432")
 cur = conn.cursor()
 
-@app.route('/')
-@app.route('/home')
+@app.route('/', methods=['GET','POST'])
+@app.route('/home', methods=['GET','POST'])
 def home():
     form = homeSearch()
-    if 'user' in session:
-        bookings= getBookingDetails(session['user'])
-        print(bookings)
-        print(len(bookings))
-    else:
-        bookings=[]
-    image_file= url_for('static', filename='restaurant_pics/default.jpg')
-    return render_template('home.html', form=form, title="Home",bookings=bookings, image_file=image_file)
+    return render_template('home.html', form=form, title="Home")
 
 @app.route('/about')
 def about():
@@ -89,6 +82,33 @@ def userAccount():
         flash('Please login to acess this account', 'danger')
         return redirect(url_for('userLogin'))
 
+@app.route('/bookings', methods=['GET','POST'])
+def bookings():
+    if('user' in session):
+        user_id= session['user']
+        query="SELECT rest.restaurant_name, rest.restaurant_id, rest.address, city.locality, transaction.bookedon, transaction.bookedfor, transaction.no_people, transaction.rating , transaction.id  from transaction, rest, city WHERE userid="+str(user_id)+" and rest.restaurant_id= transaction.restid and city.id= rest.localityid ORDER BY transaction.bookedon desc;"
+        print(query)
+        cur.execute(query)
+        bookings= cur.fetchall()
+        print(bookings[0])
+        rForm= ratingForm()
+        image_file= url_for('static', filename='restaurant_pics/default.jpg')
+        return render_template('bookings.html', title="Bookings",bookings=bookings, image_file=image_file, ratingForm=rForm)
+
+    else:
+        flash('Please login to acess this account', 'danger')
+        return redirect(url_for('userLogin'))
+
+@app.route('/rate/<ID>', methods=['GET','POST'])
+def rateTransaction(ID):
+    print("Transction ID: ",ID)
+    rForm= ratingForm()
+    if rForm.validate_on_submit():
+        print(rForm.rating.data)
+        cur.execute("UPDATE transaction SET rating= %s WHERE id = %s",(rForm.rating.data,ID))
+        conn.commit()
+    return redirect(url_for('bookings'))
+
 
 ########################################### Restaurant routes #####################################
 @app.route('/find/<ID>', methods=['GET','POST'])
@@ -117,15 +137,13 @@ def findRestaurant(ID):
 
 @app.route('/search', methods=['GET','POST'])
 def search():
-   cur.execute("""SELECT restaurant_name,address, cuisines, averagecost_for_two, currency, aggregate_rating, restaurant_id FROM rest LIMIT 10;""")
-   restaurants= cur.fetchall()
-   form= searchForm()
-   if form.validate_on_submit():
+    form= searchForm()
+    if form.validate_on_submit():
         print(form.rating.data==None)
         if(False):
-            query="SELECT distinct restaurant_name,address, cuisines, averagecost_for_two, currency, aggregate_rating, restaurant_id, ratings.rating_color from rest, city, cuisine,rest_cuisine, ratings WHERE rest.localityid=city.id and lower(city.city)=lower('"+str(form.city.data)+"') and ratings.aggregate_rating = rest.aggregate_rating "
+            query="SELECT distinct restaurant_name,address, cuisines, averagecost_for_two, currency, rest.aggregate_rating, restaurant_id, ratings.rating_color from rest, city, cuisine,rest_cuisine, ratings WHERE rest.localityid=city.id and lower(city.city)=lower('"+str(form.city.data)+"') and ratings.aggregate_rating = rest.aggregate_rating "
         else:
-            query="SELECT distinct restaurant_name,address, cuisines, averagecost_for_two, currency, aggregate_rating, restaurant_id, ratings.rating_color from rest, city, ratings WHERE rest.localityid=city.id and lower(city.city)=lower('"+str(form.city.data)+"') and ratings.aggregate_rating = rest.aggregate_rating "
+            query="SELECT distinct restaurant_name,address, cuisines, averagecost_for_two, currency, rest.aggregate_rating, restaurant_id, ratings.rating_color from rest, city, ratings WHERE rest.localityid=city.id and lower(city.city)=lower('"+str(form.city.data)+"') and ratings.aggregate_rating = rest.aggregate_rating "
         if(form.restaurantName.data!=""):
             query+=" and lower(rest.restaurant_name) like lower('%" + form.restaurantName.data + "%') "
         if(form.locality.data!=""):
@@ -134,19 +152,24 @@ def search():
             query+=" and rest.aggregate_rating>= "+str(form.rating.data)
         # cuisines="'japanese','korean'"
         # and_or=False
-        # if(cuisines!=""):
-        #     query+= " and rest.restaurant_id= rest_cuisine.rest_id and cuisine.cuisine_code= rest_cuisine.cuisine_code and lower(cuisine.cuisine) in ("+cuisines+") "
+        if(form.cuisine.data!=""):
+            query+= " and rest.restaurant_id= rest_cuisine.rest_id and cuisine.cuisine_code= rest_cuisine.cuisine_code and lower(cuisine.cuisine) in ("+cuisines+") "
+        print(form.cuisine.data)
 
-        sortbyRating= False
-        sortbyRestName= False
-        sortbyPrice= True
-        if(sortbyPrice):
+        if(form.sortBy.data=='rating'):
             query+= "ORDER BY rest.aggregate_rating desc"
+        elif(form.sortBy.data=='price'):
+            query+= "ORDER BY rest.averagecost_for_two"
+        elif(form.sortBy.data=='restName'):
+            query+= "ORDER BY rest.restaurant_name"
         print(query)
         cur.execute(query+";")
         restaurants= cur.fetchall()
-   return render_template('search.html',title='Find Restaurant',restaurants=restaurants, form=form)
+        print(restaurants[0])
+    else:
+        form.rating.data=0
+        form.sortBy.data='rating'
+        cur.execute("""SELECT restaurant_name,address, cuisines, averagecost_for_two, currency, rest.aggregate_rating, restaurant_id, ratings.rating_color FROM rest, ratings WHERE ratings.aggregate_rating = rest.aggregate_rating LIMIT 10;""")
+        restaurants= cur.fetchall()
+    return render_template('search.html',title='Find Restaurant',restaurants=restaurants, form=form)
 
-def getBookingDetails(user_id):
-    cur.execute("SELECT rest.restaurant_name, rest.address, city.locality, transaction.bookedfor, transaction.no_people, transaction.rating from transaction, rest, city WHERE userid="+str(user_id)+" and rest.restaurant_id= transaction.restid and city.id= rest.localityid;")
-    return cur.fetchall()
