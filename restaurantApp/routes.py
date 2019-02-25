@@ -3,9 +3,14 @@ from flask import Flask, render_template, redirect, flash,url_for, session
 from restaurantApp.forms import RegisterationForm, LoginForm, searchForm, UpdateForm, homeSearch, tableBookingForm, ratingForm
 from restaurantApp import app, bcrypt, login_manager
 import datetime
+# dbname = "group_3"
+# password = "202-901-602"
+# conn = pg.connect(database = dbname, user = "group_3", password=password,  host = "10.17.50.247", port = "5432")
+# cur = conn.cursor()
+
 dbname = "project"
 password = "Password@123"
-conn = pg.connect(database = dbname, user = "postgres", password = password, host = "13.233.41.140", port = "5432")
+conn = pg.connect(database = dbname, user = "postgres", password=password,  host = "13.233.41.140", port = "5432")
 cur = conn.cursor()
 
 @app.route('/', methods=['GET','POST'])
@@ -108,7 +113,6 @@ def bookings():
         rForm= ratingForm()
         image_file= url_for('static', filename='restaurant_pics/default.jpg')
         return render_template('bookings.html', title="Bookings",bookings=bookings, image_file=image_file, ratingForm=rForm)
-
     else:
         flash('Please login to acess this account', 'danger')
         return redirect(url_for('userLogin'))
@@ -143,9 +147,11 @@ def findRestaurant(ID):
             cur.execute("INSERT into transaction (userid, restid, bookedon, bookedfor, no_people ) values " \
                         "(%s, %s, %s, %s, %s);", (userid, restid, bookedon, bookedfor, no_people))
             conn.commit()
+            flash('Table booked successfully', 'success')
+            return redirect(url_for('bookings'))
         else:
             flash('Please login to book the table', 'danger')
-        return redirect(url_for('userLogin'))
+            return redirect(url_for('userLogin'))
     return render_template('restaurant.html',title=restaurant[0][0], restaurant=restaurant[0], image_file=image_file, form=form)
 
 
@@ -168,10 +174,13 @@ def search():
         cuisines=cuisines.split(",")
         temp="'"
         for cuisine in cuisines:
+            cuisine=cuisine.lower()
+            cuisine=cuisine.strip()
             temp+=cuisine+"','"
         cuisines= temp[:len(temp)-2]
         # cuisines="'japanese','korean'"
         # and_or=False
+        print(cuisines)
         if(form.cuisine.data!=""):
             query+= " and rest.restaurant_id= rest_cuisine.rest_id and cuisine.cuisine_code= rest_cuisine.cuisine_code and lower(cuisine.cuisine) in ("+cuisines+") "
         
@@ -182,10 +191,10 @@ def search():
             query+= "ORDER BY rest.averagecost_for_two"
         elif(form.sortBy.data=='restName'):
             query+= "ORDER BY rest.restaurant_name"
+
         print(query)
         cur.execute(query+";")
         restaurants= cur.fetchall()
-        print(restaurants[0])
     else:
         form.rating.data=0
         form.sortBy.data='rating'
