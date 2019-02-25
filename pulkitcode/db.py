@@ -68,7 +68,25 @@ cur.execute(crttbl)
 
 conn.commit()
 
-#cur.execute("\\COPY country FROM 'C:\\Users\\Admin\\Desktop\\Pulkit\\Sem 8\\COL362\\Project\\Country-Code.csv';")
+trigger_func = "CREATE OR REPLACE FUNCTION update_ratings() RETURNS trigger as \n" \
+                "$update_ratings$\n" \
+                "DECLARE\n" \
+                    "temprate FLOAT;\n" \
+                    "tempvote INT;\n" \
+                "BEGIN\n" \
+                    "select aggregate_rating, votes into temprate, tempvote from rest where rest.restaurant_id = new.restid;\n" \
+                    "UPDATE rest SET aggregate_rating = ROUND((((temprate*tempvote)+new.rating)/(tempvote+1))::numeric,1) where rest.restaurant_id = new.restid;\n" \
+                    "UPDATE rest SET votes = votes+1 where rest.restaurant_id = new.restid;\n"\
+                    "RETURN NULL;\n" \
+                "END;\n" \
+                "$update_ratings$\n" \
+                "language plpgsql;"
+trigger = "DROP TRIGGER IF EXISTS trig_updateratings on Transaction;\n" \
+          "CREATE TRIGGER trig_updateratings AFTER UPDATE of rating on Transaction FOR EACH ROW EXECUTE PROCEDURE update_ratings();"
+
+cur.execute(trigger_func)
+cur.execute(trigger)
+conn.commit()
 
 putdata = "INSERT INTO city (Locality, City, Country_Code) SELECT DISTINCT Locality, City, Country_Code" \
           " FROM temp ORDER BY Country_Code, City, Locality;"

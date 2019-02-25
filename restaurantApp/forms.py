@@ -19,7 +19,10 @@ class UpdateForm(FlaskForm):
     name        = StringField('Name',
                     validators=[DataRequired(),Length(min=2, max=20)])
     email       = StringField('Email',validators=[DataRequired(),Email()])
-    date        = DateField("Date",format="%Y-%M-%d", validators=[DataRequired()])
+    date        = DateField("Date of Birth",format="%Y-%m-%d", validators=[DataRequired()])
+    gender      = RadioField("Gender", choices=[('M','Male'),('F','Female')])
+    address     = TextAreaField("Address", validators=[DataRequired()])
+    locality    = StringField("Locality", validators=[DataRequired()])
     submit      = SubmitField('Update')
 
 class LoginForm(FlaskForm):
@@ -39,8 +42,7 @@ class searchForm(FlaskForm):
     submit      = SubmitField('Search')
     cuisine     = StringField()
     sortBy      = RadioField("Sort By", choices=[('rating','Rating'),('price','Price'),('restName','Restaurant Name')])
-    #cusinineOR    = StringField()
-    #Cost range     
+       
 
 class homeSearch(FlaskForm):
     city        = StringField('City:', validators=[DataRequired()])

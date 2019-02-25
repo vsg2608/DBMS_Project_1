@@ -70,12 +70,26 @@ def userLogout():
     flash('You have been logged out!', 'success')
     return redirect(url_for('home'))
 
-@app.route('/userAccount')
+@app.route('/userAccount',methods=['GET','POST'])
 def userAccount():
     if('user' in session):
         form=UpdateForm()
-        cur.execute("SELECT name, email FROM users WHERE user_id='"+str(session['user'])+"';")
+        if form.validate_on_submit():
+            print("Updating")
+            cur.execute("""UPDATE users SET name= %s, email= %s, dob= %s, gender=%s, address= %s,
+                                    locality= %s WHERE user_id= %s;""",
+                                    (form.name.data, form.email.data, form.date.data, form.gender.data,
+                                    form.address.data, form.locality.data, session['user']))
+            conn.commit()
+            flash('User details have been updated', 'success')
+        cur.execute("SELECT name, email, dob, gender, address, locality FROM users WHERE user_id='"+str(session['user'])+"';")
         user= cur.fetchall()[0]
+        form.name.data      = user[0]
+        form.email.data     = user[1]
+        form.date.data      = user[2]
+        form.gender.data    = user[3]
+        form.address.data   = user[4]
+        form.locality.data  = user[5]   
         image_file= url_for('static', filename='profile_pics/default.jpg')
         return render_template('userAccount.html',title='User Account', user=user, image_file=image_file, form=form)
     else:
@@ -140,7 +154,7 @@ def search():
     form= searchForm()
     if form.validate_on_submit():
         print(form.rating.data==None)
-        if(False):
+        if(form.cuisine.data!=""):
             query="SELECT distinct restaurant_name,address, cuisines, averagecost_for_two, currency, rest.aggregate_rating, restaurant_id, ratings.rating_color from rest, city, cuisine,rest_cuisine, ratings WHERE rest.localityid=city.id and lower(city.city)=lower('"+str(form.city.data)+"') and ratings.aggregate_rating = rest.aggregate_rating "
         else:
             query="SELECT distinct restaurant_name,address, cuisines, averagecost_for_two, currency, rest.aggregate_rating, restaurant_id, ratings.rating_color from rest, city, ratings WHERE rest.localityid=city.id and lower(city.city)=lower('"+str(form.city.data)+"') and ratings.aggregate_rating = rest.aggregate_rating "
@@ -150,11 +164,17 @@ def search():
             query+=" and lower(city.locality) like lower('%" + form.locality.data + "%') "
         if(form.rating.data!="" and form.rating.data!=None):
             query+=" and rest.aggregate_rating>= "+str(form.rating.data)
+        cuisines=form.cuisine.data
+        cuisines=cuisines.split(",")
+        temp="'"
+        for cuisine in cuisines:
+            temp+=cuisine+"','"
+        cuisines= temp[:len(temp)-2]
         # cuisines="'japanese','korean'"
         # and_or=False
         if(form.cuisine.data!=""):
             query+= " and rest.restaurant_id= rest_cuisine.rest_id and cuisine.cuisine_code= rest_cuisine.cuisine_code and lower(cuisine.cuisine) in ("+cuisines+") "
-        print(form.cuisine.data)
+        
 
         if(form.sortBy.data=='rating'):
             query+= "ORDER BY rest.aggregate_rating desc"
