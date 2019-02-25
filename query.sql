@@ -44,7 +44,7 @@
 -- -- AFTER INSERT OF rating ON Transaction
 -- -- EXECUTE PROCEDURE update_orders();
 
-CREATE FUNCTION update_ratings() RETURNS trigger as
+CREATE OR REPLACE FUNCTION update_ratings() RETURNS trigger as
 $update_ratings$
 DECLARE
     temprate FLOAT;
@@ -58,6 +58,7 @@ END;
 $update_ratings$
 language plpgsql;
 
+DROP TRIGGER IF EXISTS trig_updateratings on Transaction;
 CREATE TRIGGER trig_updateratings AFTER UPDATE of rating on Transaction FOR EACH ROW EXECUTE PROCEDURE update_ratings();
 
 -- CREATE FUNCTION update_ratings() RETURNS trigger as $update_ratings$ DECLARE temprate FLOAT := select aggregate_rating from rest where rest.restaurant_id = new.restid;BEGIN
