@@ -109,7 +109,7 @@ def bookings():
         print(query)
         cur.execute(query)
         bookings= cur.fetchall()
-        print(bookings[0])
+        #print(bookings[0])
         rForm= ratingForm()
         image_file= url_for('static', filename='restaurant_pics/default.jpg')
         return render_template('bookings.html', title="Bookings",bookings=bookings, image_file=image_file, ratingForm=rForm)
