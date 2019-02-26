@@ -16,7 +16,9 @@ cur = conn.cursor()
 @app.route('/', methods=['GET','POST'])
 @app.route('/home', methods=['GET','POST'])
 def home():
-    form = homeSearch()
+    form = searchForm()
+    form.rating.data=0
+    form.sortBy.data='rating'
     return render_template('home.html', form=form, title="Home")
 
 @app.route('/about')
@@ -202,3 +204,14 @@ def search():
         restaurants= cur.fetchall()
     return render_template('search.html',title='Find Restaurant',restaurants=restaurants, form=form)
 
+@app.route('/setCurrency', methods=['GET','POST'])
+def setCurrency():
+    session['currency']='Pounds()'
+    return 'Curency set to ' + session['currency']
+
+@app.route('/getCurrency', methods=['GET','POST'])
+def getCurrency():
+    cur.execute("SELECT * from cur_conv;")
+    currencies= cur.fetchall()
+    print(currencies)
+    return session['currency'] or None

@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, RadioField, TextAreaField, DecimalField
+from wtforms import StringField, SelectField, PasswordField, SubmitField, BooleanField, IntegerField, RadioField, TextAreaField, DecimalField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, NumberRange
 from wtforms.fields.html5 import DateField, DateTimeField
 
@@ -58,4 +58,11 @@ class tableBookingForm(FlaskForm):
 class ratingForm(FlaskForm):
     rating      = IntegerField("Rating", validators=[DataRequired(), NumberRange(min=0, max=5, message="Rating should be between 0 and 5")])
     submit      = SubmitField('Rate')
+
+########################################################################################################
+
+CURRENCY_CHOICES = [('AL', 'Alabama'),('AK','Alaska')]
+
+class currencyForm(FlaskForm):
+    state = SelectField(label='State', choices=CURRENCY_CHOICES)
 
