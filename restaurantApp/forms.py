@@ -1,8 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, PasswordField, SubmitField, BooleanField, IntegerField, RadioField, TextAreaField, DecimalField
+from wtforms import StringField,SelectField, PasswordField, SubmitField, BooleanField, IntegerField, RadioField, TextAreaField, DecimalField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, NumberRange
-from wtforms.fields.html5 import DateField, DateTimeField
+from wtforms.fields.html5 import DateField, DateTimeField, DateTimeLocalField
 
+from datetime import datetime, timedelta
 class RegisterationForm(FlaskForm):
     name        = StringField('Name',
                     validators=[DataRequired(),Length(min=2, max=20)])
@@ -52,7 +53,7 @@ class homeSearch(FlaskForm):
 
 class tableBookingForm(FlaskForm):
     noOfMembers     = IntegerField('Table for',validators=[DataRequired()])
-    date            = DateField("Booking Date, Time (Upto 7 days from now)",format="%Y-%m-%d", validators=[DataRequired()])
+    date            = DateTimeField(label='Booking Date & Time (Upto 7 days from now)',validators=[DataRequired()],format = "%D %H:%M",default= datetime.now()+timedelta(days=1))
     submit          = SubmitField('Book Table')
 
 class ratingForm(FlaskForm):
@@ -64,5 +65,5 @@ class ratingForm(FlaskForm):
 CURRENCY_CHOICES = [('AL', 'Alabama'),('AK','Alaska')]
 
 class currencyForm(FlaskForm):
-    state = SelectField(label='State', choices=CURRENCY_CHOICES)
+    currency = SelectField(label='State', choices=CURRENCY_CHOICES)
 

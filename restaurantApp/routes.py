@@ -1,6 +1,6 @@
 import psycopg2 as pg
 from flask import Flask, render_template, redirect, flash,url_for, session
-from restaurantApp.forms import RegisterationForm, LoginForm, searchForm, UpdateForm, homeSearch, tableBookingForm, ratingForm
+from restaurantApp.forms import RegisterationForm, LoginForm, searchForm, currencyForm, UpdateForm, homeSearch, tableBookingForm, ratingForm
 from restaurantApp import app, bcrypt, login_manager
 import datetime
 # dbname = "group_3"
@@ -19,7 +19,9 @@ def home():
     form = searchForm()
     form.rating.data=0
     form.sortBy.data='rating'
-    return render_template('home.html', form=form, title="Home")
+    curForm= currencyForm()
+    print(curForm.currency.choices)
+    return render_template('home.html', form=form, title="Home",curForm=curForm)
 
 @app.route('/about')
 def about():
@@ -111,7 +113,7 @@ def bookings():
         print(query)
         cur.execute(query)
         bookings= cur.fetchall()
-        print(bookings[0])
+        #print(bookings[0])
         rForm= ratingForm()
         image_file= url_for('static', filename='restaurant_pics/default.jpg')
         return render_template('bookings.html', title="Bookings",bookings=bookings, image_file=image_file, ratingForm=rForm)
@@ -214,4 +216,4 @@ def getCurrency():
     cur.execute("SELECT * from cur_conv;")
     currencies= cur.fetchall()
     print(currencies)
-    return session['currency'] or None
+    return session['currency']
